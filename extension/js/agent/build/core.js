@@ -1,24 +1,25 @@
 
 if (typeof window._ == "undefined") {
-  // @include ../../lib/underscore.js
+  // @include ../../lib/underscore/underscore.js
+ var _ = this._;
 }
-var _ = this._;
-
 
 // add jQuery if it's not there
 if (typeof window.$ == "undefined") {
-  // @include ../../lib/jquery.js
+  // @include ../../lib/jquery/jquery.js
+ var $ = this.$;
 }
 
 // add jQuery to window.__agent because Backbone requires it on the root
-this.$ = window.$;
+this.$ = $ || window.$ || window.jQuery;
+var $ = this.$;
 
-// @include ../../lib/underscore-contrib.js
+// @include ../../lib/underscore-contrib/dist/underscore-contrib.js
 
 
 // @include ../../lib/backbone-no-amd.js
-// @include ../../lib/backbone.radio.js
-// @include ../../lib/marionette.js
+// @include ../../lib/backbone.radio/build/backbone.radio.js
+// @include ../../lib/backbone.marionette/lib/backbone.marionette.js
 
 // define Backbone and Marionette locally in the agent closure
 var Backbone = this.Backbone;
@@ -32,7 +33,8 @@ var Marionette = this.Marionette;
   */
 
 // @include ../../lib/function-bind-polyfill.js
-// @include ../../lib/watch.js
+// @include ../../lib/function-performance-polyfill.js
+// @include ../../lib/watchjs/src/watch.js
 
 /*
  * UTILS
@@ -41,11 +43,7 @@ var Marionette = this.Marionette;
 
 
 // @include ../../common/util/debug.js
-// @include ../utils/bind.js
-// @include ../utils/isObject.js
-// @include ../utils/isArray.js
 // @include ../utils/toJson.js
-// @include ../utils/clone.js
 // @include ../utils/sendMessage.js
 // @include ../utils/getHiddenProperty.js
 // @include ../utils/setHiddenProperty.js
@@ -57,6 +55,8 @@ var Marionette = this.Marionette;
 // @include ../utils/unwrapListenToOnceWrapper.js
 // @include ../utils/isNativeFunction.js
 // @include ../utils/printProperty.js
+// @include ../utils/lazyWorker.js
+// @include ../utils/stackFrame.js
 
 
 
@@ -136,25 +136,29 @@ var Marionette = this.Marionette;
 // @include ../patches/patchBackboneRadio.js
 
 /*
+ * ACTIONS
+ *
+ */
+
+// @include ../actions/highlightEl.js
+// @include ../actions/search.js
+
+/*
  * MARIONETTE
  *
  */
 
-// @include ../marionette/knownTypes.js
-// @include ../marionette/serialize/serializeEvents.js
-// @include ../marionette/serialize/serializeEventsHash.js
-// @include ../marionette/serialize/serializeElement.js
-// @include ../marionette/serialize/serializeView.js
-// @include ../marionette/serialize/serializeModel.js
-// @include ../marionette/serialize/serializeCollection.js
-// @include ../marionette/serialize/serializeChannelWreqr.js
-// @include ../marionette/serialize/serializeChannelRadio.js
-// @include ../marionette/actions/search.js
-// @include ../marionette/actions/stopSearch.js
-// @include ../marionette/actions/highlightEl.js
-// @include ../marionette/actions/unhighlightEl.js
-// @include ../marionette/utils/viewList.js
-// @include ../marionette/utils/regionInspector.js
+// @include ../utils/knownTypes.js
+// @include ../serializes/serializeEvents.js
+// @include ../serializes/serializeEventsHash.js
+// @include ../serializes/serializeElement.js
+// @include ../serializes/serializeView.js
+// @include ../serializes/serializeModel.js
+// @include ../serializes/serializeCollection.js
+// @include ../serializes/serializeChannelWreqr.js
+// @include ../serializes/serializeChannelRadio.js
+// @include ../actions/viewList.js
+// @include ../actions/regionInspector.js
 
-// @include ../marionette/appObserver.js
+// @include ../actions/appObserver.js
 

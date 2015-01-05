@@ -2,6 +2,23 @@
 
 The Agent is the script that is injected into the application window. The agent is responsible for spying on the the Application and communicating with the Inspector.
 
+
+### Code directory structure
+```
+extension/js/agent
+├── agent.js           // main script
+├── app.json           // config file
+├── build              // concat files
+├── components         // component definitions (Views, Models..)
+├── serializes         // objects to serialize
+├── actions            // functions that perform window actions (search, highlight)
+├── patches            // class monkey patches
+├── utils              // agent util files
+└── watchers           // object observe helpers
+```
+
+
+
 ### Spying
 
 The Agent spies on the Application by patching a Backbone and Marionette [source](../extension/js/agent/agent.js).
@@ -10,7 +27,7 @@ the patches [folder](../extension/js/agent/patches).
 
 ### Inspector Actions
 
-When the Inspector wants to carry out an action on the page like highlight a dom element, or starting search, the inspector talks to the Agent's appObserver. The AppObserver, knows about all of the actions that are possible and will delegate to the responsible party to see it through. The appObserver can be found [here](../extension/js/agent/marionette/appObserver.js)
+When the Inspector wants to carry out an action on the page like highlight a dom element, or starting search, the inspector talks to the Agent's `appObserver`. The AppObserver, knows about all of the actions that are possible and will delegate to the responsible party to see it through. The appObserver can be found [here](../extension/js/agent/marionette/appObserver.js)
 
 
 ### Agent Events

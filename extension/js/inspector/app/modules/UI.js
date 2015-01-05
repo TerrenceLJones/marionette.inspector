@@ -40,7 +40,8 @@ define([
       'agent:search': 'onSearch',
       'agent:View:new': 'onViewNew',
       'agent:View:remove': 'onViewRemove',
-      'agent:view:change': 'onViewChange'
+      'agent:view:change': 'onViewChange',
+      'agent:ui:regionTree': 'onRegionTree'
     },
 
     appEvents: {
@@ -55,6 +56,10 @@ define([
       this.client = client;
       _.bindAll(this, 'fetchData');
       this.fetchData = _.debounce(this.fetchData, 30);
+
+      // used for keeping track the cid of a view we want to show,
+      // but hasn't been reported by the agent
+      this._waitingForCid = undefined;
     },
 
     setupData: function() {
@@ -79,11 +84,20 @@ define([
       this.viewCollection.reset();
     },
 
+    onRegionTree: function(regionTree) {
+      this.uiData.set('regionTree', regionTree);
+    },
+
     onViewNew: function (event) {
       logger.log('ui', 'new view', event.data.cid);
 
       var viewData = event.data;
       this.viewCollection.add(viewData);
+
+      if (event.data.cid == this._waitingForCid) {
+        this.showViewInfo(event.data.cid);
+        this._waitingForCid = null;
+      }
     },
 
     onViewRemove: function (event) {
@@ -129,19 +143,21 @@ define([
      *
     */
     onSearch: function(data) {
+      logger.log('ui', 'search event ', data.name);
+
       var viewModel = this.viewCollection.findView(data.cid);
       if (!viewModel) {
         return;
       }
 
-      Radio.command('app', 'navigate', 'ui');
-
-      logger.log('ui', 'search event ', data.name);
       viewModel.trigger('search:' + data.name);
 
       if (data.name == 'mousedown') {
         Radio.command('app', 'search:stop');
-        Radio.command('ui', 'highlightRow', data)
+        Radio.command('app', 'navigate:knownObject', {
+          type: 'View',
+          cid: data.cid
+        });
       }
 
     },
@@ -181,6 +197,18 @@ define([
       this.client.appObserverCall('stopSearch');
     },
 
+    showViewInfo: function(cid) {
+      var node = this.uiData.findViewTreeNodeByCid(cid);
+      if (!node) {
+        return;
+      }
+
+      Radio.command('ui', 'show:more-info', {
+        cid: cid,
+        path: node.path
+      });
+    },
+
     buildLayout: function() {
       return new Layout({
         model: this.uiData,
@@ -200,14 +228,24 @@ define([
         this.showModule();
         this.fetchData();
       },
-      showView: function(cid) {
-        this.showModule();
-        var view = this.viewCollection.findView(cid);
-        Radio.command('ui', 'show:more-info', {
-          cid: cid,
-          path: view.treeProperties.path
-        });
 
+      showView: function(cid) {
+        if (Radio.request('app', 'active:tool') != 'ui') {
+          this.showModule();
+        }
+
+        var view = this.viewCollection.findView(cid);
+        if (!view) {
+          Radio.command('ui', 'show:loadingView', {
+            cid: cid
+          });
+
+          logger.log('ui', 'couldnt find view', cid);
+          this._waitingForCid = cid;
+          return;
+        }
+
+        this.showViewInfo(cid);
       }
     }
   });

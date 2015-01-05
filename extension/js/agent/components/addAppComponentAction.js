@@ -1,7 +1,7 @@
 
 // @private
 // Restituisce l'indice dell'azione aggiunta.
-var addAppComponentAction = bind(function(appComponent, appComponentAction) {
+var addAppComponentAction = _.bind(function(appComponent, appComponentAction) {
     var appComponentInfo = this.getAppComponentInfo(appComponent);
 
     if (!appComponentInfo) {
@@ -28,3 +28,5 @@ var addAppComponentAction = bind(function(appComponent, appComponentAction) {
 
     return actionIndex;
 }, this);
+
+this.addAppComponentAction = addAppComponentAction;

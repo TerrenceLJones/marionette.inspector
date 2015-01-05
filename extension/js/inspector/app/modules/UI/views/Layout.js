@@ -7,8 +7,9 @@ define([
   'app/modules/UI/views/ViewMoreInfo',
   'app/modules/UI/models/TreeNode',
   'app/modules/UI/views/ViewTree',
+  'app/modules/UI/views/LoadingView',
 ], function(Marionette, Backbone, tpl, Radio, logger,
-  ViewMoreInfo, TreeNode, ViewTree) {
+  ViewMoreInfo, TreeNode, ViewTree, LoadingView) {
 
   return Marionette.LayoutView.extend({
 
@@ -31,6 +32,8 @@ define([
 
     uiCommands: {
       'show:more-info': 'showMoreInfo',
+      'show:loadingView': 'showLoadingView',
+      'empty:moreInfo': 'emptyMoreInfo',
       'unhighlightRows': 'unhighlightRows',
       'highlightRow': 'highlightRow'
     },
@@ -43,6 +46,14 @@ define([
     onRender: function() {
       logger.log('ui', 'layout rendered');
       this.onRegionTreeUpdate();
+    },
+
+    showLoadingView: function(data) {
+      var cid = data.cid;
+
+      this.getRegion('viewMoreInfo').show(new LoadingView({
+        model: new Backbone.Model({cid: cid})
+      }));
     },
 
     onRegionTreeUpdate: function() {
@@ -59,8 +70,8 @@ define([
           viewCollection: this.options.viewCollection
         }));
 
-        this.viewTreeModel.collapse();
-        this.viewTreeModel.expandPath('app');
+        // this.viewTreeModel.collapse();
+        // this.viewTreeModel.expandPath('app');
       } else {
         this.viewTreeModel.updateNodes(tree.nodes);
       }
@@ -70,6 +81,7 @@ define([
       var viewModel = this.options.viewCollection.findView(data.cid)
 
       if (!viewModel) {
+        console.log('couldnt find the view', data.cid);
         return;
       }
 
@@ -80,6 +92,10 @@ define([
       }));
     },
 
+    emptyMoreInfo: function() {
+      this.getRegion('viewMoreInfo').empty();
+    },
+
     unhighlightRows: function() {
       this.getRegion('viewTree')
         .$el
@@ -88,18 +104,18 @@ define([
     },
 
     highlightRow: function(data) {
-      var viewModel = this.viewCollection.findView(data.cid);
-      if (!viewModel || !viewModel.treeProperties || !viewModel.treeProperties.path) {
-        return;
-      }
+      var $row = this.findRowWithCid(data.cid);
+      $row.trigger('highlight');
 
-      this.viewTreeModel.expandPath(viewModel.treeProperties.idPath);
-      viewModel.trigger('highlight');
       this.scrollToRow(data.cid);
     },
 
+    findRowWithCid: function(cid) {
+      return this.$el.find("[data-cid='" + cid + "']");
+    },
+
     scrollToRow: function(cid) {
-      $row = this.$el.find("[data-cid='" + cid + "']");
+      $row = this.findRowWithCid(cid);
       $list = this.getRegion('viewTree').$el;
 
       isOffScreen =

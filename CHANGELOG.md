@@ -1,3 +1,45 @@
+## V0.5.1
+#### 1-2-2014
+
+### Overview
+This is a small, hopefully uneventful Inspector Release.
+
+The nicest thing here is the introduction of a back & forward button, which helps when you use the inspector a lot to jump from one view, to another, and then a model get back to where you came from.
+
+The other nice little thing, is a "View is loading" pane, which is useful now that we delay serializing views. In 0.5 it became kinda common to have to wait a second or two for everything to load. During that time, you'd see a blank view info pane if you clicked on a region. Now we let you know, you just gotta hold your horses.
+
+
+### Added
++ Added a default recording for the sandbox
++ Added an inspector back/forward button
++ Added an inspector loading view for fetching views
+
+### Changed
++ Refactored agent utilities to be more consistent
+
+## V0.5
+#### 12-24-2014
+
+### Overview
+
+### Added
++ Added the LazyWorker. The lazy worker throttles agent tasks so that the tasks are run primarily during window idle cycles.
++ Added Inspector sandbox. The sandbox is a new dev environment for working on the inspector w/o a running app.
++ Added lots of new documentation for getting started
++ Improved the activity pane duration precision from milliseconds to nanoseconds.
++ Added an inspector test-suite. We should have had this a long time ago, but the environment was difficult to configure.
++ Added UI activity and warnings pane for showing events in the UI info panel
++ Added a selected state for the activity tree node
+
+### Changed
++ Changed vendor 3rd party libraries to be installed from bower and npm rather than a local version in the repo.
++ Upgraded to latest grunt-mocha
++ Extracted tests scripts into their own file
++ Switched to grunt-sass for 1000x perf speedup on build times
++ Refactored agent to use more underscore utils
++ Refactored agent util folder to use iife pattern with Agent namespaces.
+
+
 ## V0.4
 #### 12-18-2014
 

@@ -38,12 +38,18 @@ if (window.__agent) {
 }
 ```
 
-> Note this should go at the very top before your Application or View classes are defined.
+> Note this line should be placed after all underscore, backbone, and marionette REQUIRES, but before Application or View classes are defined.
+
+#### Frequently Asked Questions
+If you have any additional questions, check out our [FAQ](https://github.com/marionettejs/marionette.inspector/blob/master/docs/faq.md).
 
 ---
 
 ### Play with it locally
 Follows these these steps in the [Install Guide](docs/developing_locally.md) and you should be up and running in no time.
+
+Read the [agent](https://github.com/marionettejs/marionette.inspector/blob/master/docs/agent.md) overview to understand how the inspector gathers all the information.
+
 
 ### Open Source (a.k.a. you)
 

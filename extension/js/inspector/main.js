@@ -4,16 +4,17 @@ require.config({
     // paths configuration
     paths: {
         templates: '../../templates',
+        test: '../test/',
 
-        jquery: '../lib/jquery',
-        underscore: '../lib/underscore',
-        backbone: '../lib/backbone',
-        radio: '../lib/backbone.radio',
-        marionette: '../lib/marionette',
-        text: '../lib/text',
-        bootstrap: '../lib/bootstrap.min',
-        handlebars: '../lib/handlebars',
-        'jquery.treegrid': '../lib/jquery.treegrid',
+        jquery: '../lib/jquery/jquery',
+        underscore: '../lib/underscore/underscore',
+        backbone: '../lib/backbone/backbone',
+        radio: '../lib/backbone.radio/build/backbone.radio',
+        marionette: '../lib/backbone.marionette/lib/backbone.marionette',
+        text: '../lib/text/text',
+        bootstrap: '../lib/bootstrap/dist/bootstrap',
+        handlebars: '../lib/handlebars/handlebars',
+        'jquery.treegrid': '../lib/jquery-treegrid/js/jquery.treegrid',
         logger: '../common/util/Logger'
     },
     // non-amd library loaders
@@ -53,6 +54,7 @@ require.config({
     }
 });
 
+
 require([
   "jquery",
   "jquery.treegrid",
@@ -74,6 +76,12 @@ require([
       return Handlebars.compile(template)(data);
     };
 
+    /*
+     * This flag is used to turn on the recorder
+     * for when you want to run the inspector in a sandboxed environment
+     */
+    // window.recordMessages = true;
+
     $(document).ready(function() {
         // var router = new Router();
         // Backbone.history.start();
@@ -87,6 +95,10 @@ require([
         app.module('Radio', RadioApp);
         app.module('UI', UIApp);
         app.module('Activity', ActivityApp);
+
+        if (window.appLoadCallback) {
+          window.appLoadCallback();
+        }
     });
 
     logger.log('devtools', 'started!')
